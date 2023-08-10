@@ -1,0 +1,31 @@
+#
+# Copyright (c) 2023 Fas Xmut (fasxmut@protonmail.com)
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+
+project src
+	: default-build
+		<cxxstd>2b
+	: requirements
+		<library>../../utxcpp/src//utxcpp
+		<library>../../nirtcpp/src/nirtcpp//nirtcpp
+	;
+
+include_dirs =
+		$(project-root)/src
+		$(project-root)
+	;
+
+src =
+		mdinv.cpp
+	;
+
+exe mdinv
+	:
+		$(src)
+	:
+		<include>$(include_dirs)
+	;
+
