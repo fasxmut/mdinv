@@ -47,34 +47,55 @@ try
 	nirt::gui::IGUIEnvironment * win_gui = win_device->getGUIEnvironment();
 	
 	mdinv::create_gui(win_device, win_gui);
-	
-	nirt::scene::ICameraSceneNode * camera;
-	//camera = win_smgr->addCameraSceneNodeFPS(nullptr, 15.0f, 0.05f, -1, nullptr, 0, false, 5.0f, false, true);
-	//camera = win_smgr->addCameraSceneNodeMaya();
-	camera = win_smgr->addCameraSceneNode(
-		nullptr,
-		nirt::core::vector3df{0,0,50},
-		nirt::core::vector3df{0},
-		-1,
-		true
-	);
-	camera->setPosition({0.0f, 0.0f, -20.0f});
-	camera->setTarget({0,0,0});
-	
+
 	nirt::gui::ICursorControl * cursor = win_device->getCursorControl();
 	cursor->setVisible(true);
 		
-	mdinv::window_event win_event{win_device};
+	mdinv::window_event win_event{win_device, 10000.0f};
+
 	win_device->setEventReceiver(&win_event);
+
+	mdinv::app_update_info.update_dimension(win_driver->getScreenSize());
+	utx::i32 width = static_cast<utx::i32>(mdinv::app_update_info.width());
+	utx::i32 height = static_cast<utx::i32>(mdinv::app_update_info.height());
 
 	while (win_device->run())
 	{
 		if (win_device->isWindowActive())
 		{
+			win_driver->setViewPort(nirt::core::recti{0, 0, width, height});
 			win_driver->beginScene(true, true, nirt::video::SColor{0xff335774});
-			win_smgr->drawAll();
-			win_gui->drawAll();
+
 			mdinv::app_update_info.update_dimension(win_driver->getScreenSize());
+			width = static_cast<utx::i32>(mdinv::app_update_info.width());
+			height = static_cast<utx::i32>(mdinv::app_update_info.height());
+
+			utx::i32 splitx = mdinv::app_init_info.splitx();
+			utx::i32 splity = mdinv::app_init_info.splity();
+
+			utx::i32 slidex = width/splitx;
+			utx::i32 slidey = height/splity;
+
+
+			for (utx::i32 j=0; j<splity; j++)
+			{
+				for (utx::i32 i=0; i<splitx; i++)
+				{
+					utx::i32 y = slidey * j;
+					utx::i32 x = slidex * i;
+
+					win_smgr->setActiveCamera(win_event.camera(j*splitx+i));
+					win_driver->setViewPort(nirt::core::recti{x, y, x+slidex, y+slidey});
+					win_smgr->drawAll();
+				}
+			}
+
+			////////////////////////////////////////////////////////////////////////
+
+			// Restore default View Port
+			win_driver->setViewPort(nirt::core::recti{0, 0, width, height});
+			win_gui->drawAll();
+
 			win_driver->endScene();
 		}
 		else

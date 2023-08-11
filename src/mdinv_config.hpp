@@ -34,6 +34,9 @@ protected:
 	bool __fullscreen = false;
 	std::wstring_view __title = L"Mdinv 3D Viewer";
 
+	utx::u32 __splitx = 2;
+	utx::u32 __splity = 2;
+
 	std::string_view __description = 
 R"(Mdinv 3D Viewer is a 3D mesh viewer for irrlicht and nirtcpp mesh formats.
 It will help you develop 3D applications using irrlicht or nirtcpp.)";
@@ -135,6 +138,8 @@ public:
 // get
 	utx::u32 width() const {return __width;}
 	utx::u32 height() const {return __height;}
+	utx::u32 splitx() const {return __splitx;}
+	utx::u32 splity() const {return __splity;}
 	bool fullscreen() const {return __fullscreen;}
 	std::wstring_view title() const {return __title;}
 	std::string_view description() const {return __description;}
