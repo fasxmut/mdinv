@@ -5,12 +5,17 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <nirtcpp.hpp>
-#include <utxcpp/core.hpp>
+
 #include <mdinv_config.hpp>
+#include <mdinv_gui.hpp>
 #include <mdinv_window_event.hpp>
-#include <filesystem>
+
+#include <nirtcpp.hpp>
+
+#include <utxcpp/core.hpp>
 #include <utxcpp/thread.hpp>
+
+#include <filesystem>
 
 int main()
 try
@@ -40,6 +45,19 @@ try
 	nirt::video::IVideoDriver * win_driver = win_device->getVideoDriver();
 	nirt::scene::ISceneManager * win_smgr = win_device->getSceneManager();
 	nirt::gui::IGUIEnvironment * win_gui = win_device->getGUIEnvironment();
+	
+	mdinv::create_gui(win_device, win_gui);
+	
+	nirt::scene::ICameraSceneNode * camera = 
+		win_smgr->addCameraSceneNodeFPS(nullptr, 35.0f, 0.05f, -1, nullptr, 0, false, 5.0f, true, false);
+	camera->setPosition({10.0f, 10.0f, -500.0f});
+	camera->setTarget({0,0,0});
+	
+	nirt::gui::ICursorControl * cursor = win_device->getCursorControl();
+	cursor->setVisible(true);
+		
+	mdinv::window_event win_event{win_device};
+	win_device->setEventReceiver(&win_event);
 
 	while (win_device->run())
 	{

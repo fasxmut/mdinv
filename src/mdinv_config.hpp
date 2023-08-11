@@ -297,6 +297,15 @@ application_update_info application_update_info::__instance{
 // app_update_info
 static application_update_info & app_update_info = application_update_info::instance();
 
+enum gui_menu_id
+{
+	bar_file_add,
+	dialog_add_mesh,
+	bar_file_close_last,
+	bar_file_close_all,
+	bar_file_exit
+};
+
 } // namespace mdinv
 
 #endif // __mdinv_src_mdinv_config_hpp__
