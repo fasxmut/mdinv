@@ -48,9 +48,17 @@ try
 	
 	mdinv::create_gui(win_device, win_gui);
 	
-	nirt::scene::ICameraSceneNode * camera = 
-		win_smgr->addCameraSceneNodeFPS(nullptr, 35.0f, 0.05f, -1, nullptr, 0, false, 5.0f, true, false);
-	camera->setPosition({10.0f, 10.0f, -500.0f});
+	nirt::scene::ICameraSceneNode * camera;
+	//camera = win_smgr->addCameraSceneNodeFPS(nullptr, 15.0f, 0.05f, -1, nullptr, 0, false, 5.0f, false, true);
+	//camera = win_smgr->addCameraSceneNodeMaya();
+	camera = win_smgr->addCameraSceneNode(
+		nullptr,
+		nirt::core::vector3df{0,0,50},
+		nirt::core::vector3df{0},
+		-1,
+		true
+	);
+	camera->setPosition({0.0f, 0.0f, -20.0f});
 	camera->setTarget({0,0,0});
 	
 	nirt::gui::ICursorControl * cursor = win_device->getCursorControl();

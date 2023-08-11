@@ -59,11 +59,10 @@ public:
 		switch (id)
 		{
 		case bar_file_add:
-			utx::print("-------------------------------- Add Mesh Called ----");
 			this->add_mesh();
 			break;
 		case bar_file_close_last:
-			utx::print("-------------------------------- Close Last Mesh Called ----");
+			this->close_last_mesh();
 			break;
 		case bar_file_close_all:
 			utx::print("-------------------------------- Close All Mesh Called ----");
@@ -85,7 +84,7 @@ public:
 			true,		// Modal
 			nullptr,		// parent
 			dialog_add_mesh,		// id
-			false,		// restore cmd ?
+			true,		// restore cwd ?
 			nullptr		// start dir
 		);
 	}
@@ -124,6 +123,20 @@ public:
 				throw std::runtime_error{"Load Mesh Error!"};
 			node->setMaterialFlag(nirt::video::EMF_LIGHTING, false);
 			node->setPosition(nirt::core::vector3df{0});
+			{// experimental
+				nirt::core::aabbox3df box = node->getBoundingBox();
+				auto * camera = smgr->getActiveCamera();
+
+				nirt::core::vector3df target = box.getCenter();
+				camera->setTarget(target);
+
+				utx::f32 slide = (box.MaxEdge-box.MinEdge).getLength()/2;
+				auto pos = target;
+				pos.X += slide/4;
+				pos.Y += slide/2;
+				pos.Z -= slide*2.5f;
+				camera->setPosition(pos);
+			}
 			this->added_mesh_list.push_back(node);
 		}
 		catch (const std::exception & err)
@@ -138,6 +151,17 @@ public:
 				nullptr // texture
 			);
 		}
+	}
+
+	void close_last_mesh()
+	{
+		if (this->added_mesh_list.empty())
+			return;
+		auto itr = this->added_mesh_list.end();
+		itr--;
+		//(*itr)->drop();
+		(*itr)->getParent()->removeChild(*itr);
+		this->added_mesh_list.erase(itr);
 	}
 };
 
