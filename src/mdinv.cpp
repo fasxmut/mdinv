@@ -15,19 +15,19 @@
 int main()
 try
 {
-	std::unique_lock lock{mdinv::mutex0};
+	std::unique_lock lock{utx::mutex0};
 	utx::print("------------------------------------------------------------------------");
-	utx::print(mdinv::app_init_info.description, "\n\n", mdinv::app_init_info.license);
+	utx::print(mdinv::app_init_info.description(), "\n\n", mdinv::app_init_info.license());
 	utx::print("------------------------------------------------------------------------");
-	utx::print("init resolution:", mdinv::app_init_info.width, 'x', mdinv::app_init_info.height);
-	utx::print("update resolution:", mdinv::app_update_info.get_width(), 'x', mdinv::app_update_info.get_height());
+	utx::print("init resolution:", mdinv::app_init_info.width(), 'x', mdinv::app_init_info.height());
+	utx::print("update resolution:", mdinv::app_update_info.width(), 'x', mdinv::app_update_info.height());
 	utx::print("------------------------------------------------------------------------");
 	lock.unlock();
 	nirt::NirtcppDevice * win_device = nirt::createDevice(
 		nirt::video::EDT_OPENGL,
-		mdinv::app_update_info.get_dimension(),
+		mdinv::app_update_info.dimension(),
 		32,
-		mdinv::app_update_info.get_fullscreen(),
+		mdinv::app_update_info.fullscreen(),
 		true,
 		true,
 		nullptr
@@ -35,7 +35,7 @@ try
 	if (! win_device)
 		throw std::runtime_error{"can not create Nirtcpp Device!"};
 	
-	win_device->setWindowCaption(mdinv::app_update_info.get_title().data());
+	win_device->setWindowCaption(mdinv::app_update_info.title().data());
 
 	nirt::video::IVideoDriver * win_driver = win_device->getVideoDriver();
 	nirt::scene::ISceneManager * win_smgr = win_device->getSceneManager();
@@ -63,7 +63,7 @@ try
 	utx::print("------------------------------------------------------------------------");
 	utx::print(
 		"Window is closed.", '\n', 
-		"Last window resolution:", mdinv::app_update_info.get_width(), 'x', mdinv::app_update_info.get_height()
+		"Last window resolution:", mdinv::app_update_info.width(), 'x', mdinv::app_update_info.height()
 	);
 	utx::print("------------------------------------------------------------------------");
 	lock.unlock();
